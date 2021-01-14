@@ -1,0 +1,77 @@
+[data-numbered-container] {
+  height: 5.5ch;
+  color: #000000;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.2;
+  background: #ffffff;
+  border: 1px solid #767676;
+  outline: 2px solid transparent;
+  outline-offset: -1px;
+  overflow: hidden;
+  cursor: text;
+}
+div[data-numbered-container] {
+  display: flex;
+}
+span[data-numbered-container] {
+  display: inline-flex;
+  vertical-align: bottom;
+}
+[data-numbered-container]:hover, [data-numbered-container]:focus-within {
+  border-color: #3b3b3b;
+}
+[data-numbered-container]:focus-within {
+  outline-color: #000000;
+}
+[data-numbered-container] * {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+[data-numbered-container] ol {
+  counter-reset: item;
+  margin: 0;
+  padding: 0.5ch;
+  padding-bottom: 0;
+  flex-shrink: 0;
+  color: #ffffff;
+  text-align: right;
+  background: #0000005e;
+  border-right: inherit;
+  list-style: inside none;
+  overflow: hidden;
+}
+[data-numbered-container] ol::after {
+  content: "";
+  width: 100%;
+  height: var(--overflow-offset);
+  display: inline-block;
+}
+[data-numbered-container][data-numbered-hidden] ol {
+  display: none;
+}
+[data-numbered-container] li::before {
+  content: counter(item);
+  counter-increment: item;
+  font-family: inherit;
+}
+[data-numbered-container] textarea {
+  margin: 0;
+  padding: 0.5ch;
+  min-width: 4ch;
+  min-height: 4ch;
+  flex-basis: 100%;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  cursor: inherit;
+  -webkit-appearance: none;
+}
+[data-numbered-container] textarea::placeholder {
+  color: inherit;
+  opacity: 0.55;
+  white-space: pre-wrap;
+}

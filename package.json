@@ -1,0 +1,10 @@
+{
+  "name": "electron_text_editor",
+  "version": "0.1.0",
+  "author": "Brandon Bennett",
+  "description": "A native text editor built using Electron!",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}

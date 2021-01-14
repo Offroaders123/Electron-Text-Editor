@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+<title>Electron Text Editor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cousine&display=swap">
+<link rel="stylesheet" href="https://offroaders123.github.io/Numbered-Textarea-Plugin/styles.css">
+<script src="https://offroaders123.github.io/Numbered-Textarea-Plugin/script.js"></script>
+<!--link ref="stylesheet" href="ntp_styles.css">
+<script src="ntp_script.js"></script-->
+
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+  }
+  html {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: #dddddd;
+    background: #333333;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    -webkit-app-region: drag;
+  }
+  main {
+    position: relative;
+    flex: 1;
+    display: flex;
+  }
+  main [data-numbered-container], #workspace_preview {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+  }
+  body.vertical main [data-numbered-container], body.vertical #workspace_preview {
+    width: 100%;
+    height: 50%;
+  }
+  main [data-numbered-container] {
+    top: 0;
+    left: 0;
+    color: #eeeeee;
+    font-size: 13px;
+    font-family: "Cousine", monospace;
+    background: #222222;
+    border: none;
+    outline: none;
+  }
+  main [data-numbered-container] textarea, main [data-numbered-container] ol {
+    padding: 6px;
+    background: none;
+  }
+  main [data-numbered-container] textarea {
+    resize: none;
+  }
+  main [data-numbered-container] ol {
+    padding: 6px 12px;
+    color: inherit;
+  }
+  main [data-numbered-container] li {
+    opacity: 0.55;
+  }
+  ::placeholder {
+    color: inherit;
+    opacity: 0.55;
+    white-space: pre-wrap;
+  }
+  ::selection {
+    color: #000000;
+    background: #b4d5ffbf;
+  }
+  ::selection:window-inactive {
+    background: #ccccccbf;
+  }
+  ::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+  }
+  ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+    background: none;
+  }
+  ::-webkit-scrollbar-thumb {
+    width: 36px;
+    height: 36px;
+    background: #7a7a7a;
+    background-clip: content-box;
+    border: 5px solid transparent;
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #9a9a9a;
+  }
+  #window_title {
+    margin-left: auto;
+  }
+  @media (min-width: 500px) {
+    #window_title {
+      margin-left: unset;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  #window_controls {
+    margin-left: auto;
+    height: 100%;
+    display: flex;
+    -webkit-app-region: no-drag;
+  }
+  #window_controls .control {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+    line-height: 14px;
+  }
+  #window_controls .control:hover {
+    background: #ffffff20;
+  }
+  #window_controls .control.maximize [data-icon]:not(.active) {
+    display: none;
+  }
+  #window_controls .control.close:hover {
+    color: #ffffff;
+    background: #e81123;
+  }
+  #workspace_preview {
+    bottom: 0;
+    right: 0;
+    background: #ffffff;
+    border: none;
+  }
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <span id="window_title">Electron Text Editor</span>
+  <div id="window_controls">
+    <button id="minimize_control" class="control minimize">&mdash;</button>
+    <button id="maximize_control" class="control maximize">
+      <span data-icon="maximize">&#9744;</span>
+      <span data-icon="restore-down">&#10064;</span>
+    </button>
+    <button id="close_control" class="control close">&#10005;</button>
+  </div>
+</header>
+
+<main>
+  <div data-numbered-container>
+    <textarea id="workspace_input" spellcheck="false"></textarea>
+  </div>
+  <iframe id="workspace_preview" src="about:blank"></iframe>
+</main>
+
+<script>
+  var Editor = {
+    environment: {
+      macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined)
+    }
+  };
+  document.querySelectorAll("[data-numbered-container]").forEach(container => container.num_establishContainer());
+  document.body.addEventListener("keydown",event => {
+    var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), ctrl = (event.ctrlKey && !Editor.environment.apple_device), command = (event.metaKey && Editor.environment.apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), ctrlShift = (ctrl && shift), shiftCommand = (shift && command), ctrlCommand = (event.ctrlKey && command);
+    if ((ctrlShift || shiftCommand) && pressed("c")){
+      event.preventDefault();
+      if (event.repeat) return;
+      ipcRenderer.send("create-window");
+    }
+    if ((ctrlShift || ctrlCommand) && (pressed("5") || pressed("%"))){
+      event.preventDefault();
+      if (event.repeat) return;
+      changeOrientation();
+    }
+    if ((ctrlShift || shiftCommand) && pressed("h")){
+      event.preventDefault();
+      if (event.repeat) return;
+      insertMarkupTemplate();
+    }
+  });
+  workspace_input.addEventListener("input",refreshPreview);
+  if (window.self == window.top) workspace_input.focus();
+  function changeOrientation(){
+    if (!document.body.classList.contains("vertical")){
+      document.body.classList.add("vertical");
+    } else document.body.classList.remove("vertical");
+  }
+  function insertMarkupTemplate(){
+    workspace_input.num_changeValue(decodeURI("%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang=%22en-US%22%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1%22%3E%0A%0A%3Cstyle%3E%0A%20%20*,%20*::before,%20*::after%20%7B%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E"));
+    refreshPreview();
+  }
+  function refreshPreview(){
+    workspace_preview.contentWindow.document.open();
+    workspace_preview.contentWindow.document.write(workspace_input.value);
+    workspace_preview.contentWindow.document.close();
+  }
+
+  var { remote, ipcRenderer } = require("electron");
+  remote.getCurrentWindow().on("maximize",refreshMaximizeControl);
+  remote.getCurrentWindow().on("unmaximize",refreshMaximizeControl);
+  window_controls.querySelectorAll(".control").forEach(control => control.setAttribute("tabindex","-1"));
+  minimize_control.addEventListener("click",() => remote.getCurrentWindow().minimize());
+  maximize_control.addEventListener("click",() => {
+    var window = remote.getCurrentWindow();
+    if (!window.isMaximized()){
+      window.maximize();
+    } else window.unmaximize();
+  });
+  close_control.addEventListener("click",() => remote.getCurrentWindow().close());
+  refreshMaximizeControl();
+  function refreshMaximizeControl(){
+    maximize_control.querySelectorAll("[data-icon]").forEach(icon => icon.classList.remove("active"));
+    var icon, window = remote.getCurrentWindow();
+    if (!window.isMaximized()){
+      icon = "maximize";
+    } else icon = "restore-down";
+    maximize_control.querySelector(`[data-icon="${icon}"]`).classList.add("active");
+  }
+</script>
+
+</body>
+
+</html>
