@@ -190,7 +190,7 @@
     if ((ctrlShift || shiftCommand) && pressed("c")){
       event.preventDefault();
       if (event.repeat) return;
-      ipcRenderer.send("create-window");
+      window.mainProcess.createWindow();
     }
     if ((ctrlShift || ctrlCommand) && (pressed("5") || pressed("%"))){
       event.preventDefault();
@@ -220,23 +220,19 @@
     workspace_preview.contentWindow.document.close();
   }
 
-  var { remote, ipcRenderer } = require("electron");
-  remote.getCurrentWindow().on("maximize",refreshMaximizeControl);
-  remote.getCurrentWindow().on("unmaximize",refreshMaximizeControl);
+  window.mainProcess.receive("refresh-maximize",refreshMaximizeControl);
   window_controls.querySelectorAll(".control").forEach(control => control.setAttribute("tabindex","-1"));
-  minimize_control.addEventListener("click",() => remote.getCurrentWindow().minimize());
+  minimize_control.addEventListener("click",() => window.mainProcess.minimize());
   maximize_control.addEventListener("click",() => {
-    var window = remote.getCurrentWindow();
-    if (!window.isMaximized()){
-      window.maximize();
-    } else window.unmaximize();
+    if (!window.mainProcess.isMaximized()){
+      window.mainProcess.maximize();
+    } else window.mainProcess.unmaximize();
   });
-  close_control.addEventListener("click",() => remote.getCurrentWindow().close());
-  refreshMaximizeControl();
+  close_control.addEventListener("click",() => window.mainProcess.close());
   function refreshMaximizeControl(){
     maximize_control.querySelectorAll("[data-icon]").forEach(icon => icon.classList.remove("active"));
-    var icon, window = remote.getCurrentWindow();
-    if (!window.isMaximized()){
+    var icon;
+    if (!window.mainProcess.isMaximized()){
       icon = "maximize";
     } else icon = "restore-down";
     maximize_control.querySelector(`[data-icon="${icon}"]`).classList.add("active");
