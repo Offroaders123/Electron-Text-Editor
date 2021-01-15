@@ -179,14 +179,15 @@
 </main>
 
 <script>
-  var Editor = {
-    environment: {
+  window.Editor = {
+    environment: () => ({
       macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined)
-    }
+    })
   };
+  window.mainProcess.receive("refresh-maximize",refreshMaximizeControl);
   document.querySelectorAll("[data-numbered-container]").forEach(container => container.num_establishContainer());
   document.body.addEventListener("keydown",event => {
-    var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), ctrl = (event.ctrlKey && !Editor.environment.apple_device), command = (event.metaKey && Editor.environment.apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), ctrlShift = (ctrl && shift), shiftCommand = (shift && command), ctrlCommand = (event.ctrlKey && command);
+    var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), ctrl = (event.ctrlKey && !Editor.environment().apple_device), command = (event.metaKey && Editor.environment().apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), ctrlShift = (ctrl && shift), shiftCommand = (shift && command), ctrlCommand = (event.ctrlKey && command);
     if ((ctrlShift || shiftCommand) && pressed("c")){
       event.preventDefault();
       if (event.repeat) return;
@@ -203,7 +204,16 @@
       insertMarkupTemplate();
     }
   });
+  window_controls.querySelectorAll(".control").forEach(control => control.setAttribute("tabindex","-1"));
+  minimize_control.addEventListener("click",() => window.mainProcess.minimize());
+  maximize_control.addEventListener("click",() => {
+    if (!window.mainProcess.isMaximized()){
+      window.mainProcess.maximize();
+    } else window.mainProcess.unmaximize();
+  });
+  close_control.addEventListener("click",() => window.mainProcess.close());
   workspace_input.addEventListener("input",refreshPreview);
+  refreshMaximizeControl();
   if (window.self == window.top) workspace_input.focus();
   function changeOrientation(){
     if (!document.body.classList.contains("vertical")){
@@ -219,16 +229,6 @@
     workspace_preview.contentWindow.document.write(workspace_input.value);
     workspace_preview.contentWindow.document.close();
   }
-
-  window.mainProcess.receive("refresh-maximize",refreshMaximizeControl);
-  window_controls.querySelectorAll(".control").forEach(control => control.setAttribute("tabindex","-1"));
-  minimize_control.addEventListener("click",() => window.mainProcess.minimize());
-  maximize_control.addEventListener("click",() => {
-    if (!window.mainProcess.isMaximized()){
-      window.mainProcess.maximize();
-    } else window.mainProcess.unmaximize();
-  });
-  close_control.addEventListener("click",() => window.mainProcess.close());
   function refreshMaximizeControl(){
     maximize_control.querySelectorAll("[data-icon]").forEach(icon => icon.classList.remove("active"));
     var icon;

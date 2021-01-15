@@ -2,11 +2,12 @@
   "name": "electron_text_editor",
   "version": "0.1.0",
   "author": "Brandon Bennett",
-  "description": "A native text editor built using Electron!",
+  "description": "Electron Text Editor",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "build"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "build": {
     "appId": "com.offroaders123.electronTextEditor",

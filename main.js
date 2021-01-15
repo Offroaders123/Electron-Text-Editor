@@ -14,7 +14,7 @@ app.on("window-all-closed",() => {
 ipcMain.on("create-window",createWindow);
 ipcMain.on("minimize-window",() => getCurrentWindow().minimize());
 ipcMain.on("maximize-window",() => getCurrentWindow().maximize());
-ipcMain.on("is-maximized-window",() => getCurrentWindow().isMaximized());
+ipcMain.on("is-maximized-window",event => event.returnValue = getCurrentWindow().isMaximized());
 ipcMain.on("unmaximize-window",() => getCurrentWindow().unmaximize());
 ipcMain.on("close-window",() => getCurrentWindow().close());
 

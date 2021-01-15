@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld("mainProcess",{/*
   createWindow: () => ipcRenderer.send("create-window"),
   minimize: () => ipcRenderer.send("minimize-window"),
   maximize: () => ipcRenderer.send("maximize-window"),
-  isMaximized: () => ipcRenderer.send("is-maximized-window"),
+  isMaximized: () => ipcRenderer.sendSync("is-maximized-window"),
   unmaximize: () => ipcRenderer.send("unmaximize-window"),
   close: () => ipcRenderer.send("close-window")
 });
