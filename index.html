@@ -13,25 +13,26 @@
 
 </head>
 
-<body>
+<body data-orientation="horizontal">
 
 <header>
-  <span id="window_title">Electron Text Editor</span>
-  <div id="window_controls">
-    <button id="minimize_control" class="control minimize">&mdash;</button>
-    <button id="maximize_control" class="control maximize">
+  <section class="app-region"></section>
+  <span class="app-title">Electron Text Editor</span>
+  <section class="window-controls">
+    <button class="control" data-control="minimize">&mdash;</button>
+    <button class="control" data-control="maximize">
       <span data-icon="maximize">&#9744;</span>
       <span data-icon="restore-down">&#10064;</span>
     </button>
-    <button id="close_control" class="control close">&#10005;</button>
-  </div>
+    <button class="control" data-control="close">&#10005;</button>
+  </section>
 </header>
 
 <main>
-  <div data-numbered-container>
-    <textarea id="workspace_input" spellcheck="false"></textarea>
+  <div class="workspace-editor" data-numbered-container>
+    <textarea id="workspace_editor" spellcheck="false"></textarea>
   </div>
-  <iframe id="workspace_preview" src="about:blank"></iframe>
+  <iframe id="workspace_preview" class="workspace-preview" src="about:blank"></iframe>
 </main>
 
 <script src="script.js"></script>

@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
 }
 html {
   position: fixed;
@@ -16,6 +15,7 @@ body {
   display: flex;
   flex-direction: column;
   color: #dddddd;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #333333;
   overflow: hidden;
   user-select: none;
@@ -26,23 +26,60 @@ header {
   display: flex;
   align-items: center;
   font-size: 13px;
+}
+header .app-region {
+  margin: var(--app-region-margin);
+  margin-bottom: 0;
+  --app-region-margin: 4px;
+  position: absolute;
+  width: calc(100% - var(--app-region-margin) * 2);
+  height: calc(100% - var(--app-region-margin));
+  z-index: -1;
   -webkit-app-region: drag;
+}
+header .app-title {
+  margin-left: auto;
+}
+@media (min-width: 500px) {
+  header .app-title {
+    margin-left: unset;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+header .window-controls {
+  margin-left: auto;
+  height: 100%;
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+header .window-controls .control {
+  padding: 8px 16px;
+  color: inherit;
+  font-size: 14px;
+  background: none;
+  border: none;
+  outline: none;
+  line-height: 14px;
+}
+header .window-controls .control:hover {
+  background: #ffffff20;
+}
+header .window-controls .control[data-control="maximize"] [data-icon]:not(.active) {
+  display: none;
+}
+header .window-controls .control[data-control="close"]:hover {
+  color: #ffffff;
+  background: #e81123;
 }
 main {
   position: relative;
   flex: 1;
   display: flex;
 }
-main [data-numbered-container], #workspace_preview {
+main .workspace-editor {
   position: absolute;
-  width: 50%;
-  height: 100%;
-}
-body.vertical main [data-numbered-container], body.vertical #workspace_preview {
-  width: 100%;
-  height: 50%;
-}
-main [data-numbered-container] {
   top: 0;
   left: 0;
   color: #eeeeee;
@@ -52,19 +89,42 @@ main [data-numbered-container] {
   border: none;
   outline: none;
 }
-main [data-numbered-container] textarea, main [data-numbered-container] ol {
+body[data-orientation="horizontal"] main .workspace-editor {
+  width: 50%;
+  height: 100%;
+}
+body[data-orientation="vertical"] main .workspace-editor {
+  width: 100%;
+  height: 50%;
+}
+main .workspace-editor textarea, main .workspace-editor ol {
   padding: 6px;
   background: none;
 }
-main [data-numbered-container] textarea {
+main .workspace-editor textarea {
   resize: none;
 }
-main [data-numbered-container] ol {
+main .workspace-editor ol {
   padding: 6px 12px;
   color: inherit;
 }
-main [data-numbered-container] li {
+main .workspace-editor li {
   opacity: 0.55;
+}
+main .workspace-preview {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ffffff;
+  border: none;
+}
+body[data-orientation="horizontal"] main .workspace-preview {
+  width: 50%;
+  height: 100%;
+}
+body[data-orientation="vertical"] main .workspace-preview {
+  width: 100%;
+  height: 50%;
 }
 ::placeholder {
   color: inherit;
@@ -95,46 +155,4 @@ main [data-numbered-container] li {
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #9a9a9a;
-}
-#window_title {
-  margin-left: auto;
-}
-@media (min-width: 500px) {
-  #window_title {
-    margin-left: unset;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-#window_controls {
-  margin-left: auto;
-  height: 100%;
-  display: flex;
-  -webkit-app-region: no-drag;
-}
-#window_controls .control {
-  padding: 8px 16px;
-  font-size: 14px;
-  color: inherit;
-  background: none;
-  border: none;
-  outline: none;
-  line-height: 14px;
-}
-#window_controls .control:hover {
-  background: #ffffff20;
-}
-#window_controls .control.maximize [data-icon]:not(.active) {
-  display: none;
-}
-#window_controls .control.close:hover {
-  color: #ffffff;
-  background: #e81123;
-}
-#workspace_preview {
-  bottom: 0;
-  right: 0;
-  background: #ffffff;
-  border: none;
 }
