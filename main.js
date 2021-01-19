@@ -4,7 +4,7 @@ const path = require("path");
 app.whenReady().then(createWindow);
 
 app.on("activate",() => {
-  if (Browser.getAllWindows().length == 0) createWindow();
+  if (BrowserWindow.getAllWindows().length == 0) createWindow();
 });
 
 app.on("window-all-closed",() => {
@@ -26,6 +26,7 @@ function createWindow(){
       preload: path.join(__dirname,"preload.js")
     },
     frame: false,
+    titleBarStyle: "hidden",
     minWidth: 267,
     minHeight: 150,
     backgroundColor: "#333333"

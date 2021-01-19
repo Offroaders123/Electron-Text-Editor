@@ -1,7 +1,8 @@
 {
-  "name": "electron_text_editor",
-  "version": "0.1.0",
+  "name": "electron-text-editor",
+  "version": "0.2.0",
   "author": "Brandon Bennett",
+  "homepage": "https://github.com/Offroaders123/Electron-Text-Editor",
   "description": "Electron Text Editor",
   "main": "main.js",
   "scripts": {
@@ -11,8 +12,12 @@
   },
   "build": {
     "appId": "com.offroaders123.electronTextEditor",
+    "productName": "Electron Text Editor",
     "win": {
       "target": "portable"
+    },
+    "mac": {
+      "target": "dmg"
     }
   },
   "devDependencies": {

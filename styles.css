@@ -27,6 +27,10 @@ header {
   align-items: center;
   font-size: 13px;
 }
+body.macOS-device header {
+  height: 28px;
+  border-bottom: 1px solid #000000;
+}
 header .app-region {
   margin: var(--app-region-margin);
   margin-bottom: 0;
@@ -38,14 +42,20 @@ header .app-region {
   -webkit-app-region: drag;
 }
 header .app-title {
-  margin-left: auto;
+  margin-left: unset;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
-@media (min-width: 500px) {
-  header .app-title {
-    margin-left: unset;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+body.window-inactive header .app-title {
+  opacity: 0.55;
+}
+@media (max-width: 500px) {
+  body:not(.macOS-device) header .app-title {
+    margin-left: auto;
+    position: unset;
+    left: unset;
+    transform: unset;
   }
 }
 header .window-controls {
@@ -53,6 +63,12 @@ header .window-controls {
   height: 100%;
   display: flex;
   -webkit-app-region: no-drag;
+}
+body.window-inactive header .window-controls {
+  opacity: 0.55;
+}
+body.macOS-device header .window-controls {
+  display: none;
 }
 header .window-controls .control {
   padding: 8px 16px;

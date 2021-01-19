@@ -3,6 +3,7 @@ window.Editor = {
     macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined)
   })
 };
+if (Editor.environment().macOS_device) document.body.classList.add("macOS-device");
 window.mainProcess.receive("refresh-maximize",refreshMaximizeControl);
 document.querySelectorAll("[data-numbered-container]").forEach(container => container.num_establishContainer());
 document.querySelectorAll("header .window-controls .control").forEach(control => {
@@ -15,6 +16,12 @@ document.querySelectorAll("header .window-controls .control").forEach(control =>
   });
   if (controlType == "close") control.addEventListener("click",() => window.mainProcess.close());
   control.setAttribute("tabindex","-1");
+});
+window.addEventListener("focus",() => {
+  if (document.body.classList.contains("window-inactive")) document.body.classList.remove("window-inactive");
+});
+window.addEventListener("blur",() => {
+  if (!document.body.classList.contains("window-inactive")) document.body.classList.add("window-inactive");
 });
 document.body.addEventListener("keydown",event => {
   var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), control = (event.ctrlKey && !Editor.environment().apple_device), command = (event.metaKey && Editor.environment().apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), controlShift = (control && shift), shiftCommand = (shift && command), controlCommand = (event.ctrlKey && command);
