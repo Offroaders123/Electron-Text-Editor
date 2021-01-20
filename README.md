@@ -16,6 +16,6 @@ This is a simple demo project that I started to learn how to create a simple nat
 The project also includes the [Electron Builder](https://github.com/electron-userland/electron-builder) framework to create compiled executables for production releases.
 
 ## How to Use
-The compiled version of the project can be run from the [latest compiled executable](https://github.com/Offroaders123/Electron-Text-Editor/releases/latest) in the repository releases section.
+The latest compiled example of the project is available to download for either Windows or macOS from the [latest releases page](https://github.com/Offroaders123/Electron-Text-Editor/releases/latest).
 
-If you would like to see the source code or try the compiling process yourself, feel free to clone the repository and check it out! I made this to help myself understand how to use Electron, and I hope it will help you do the same!
+If you would like to see the source code or try the compiling process yourself, feel free to clone the repository and see how it works! I made this to help myself understand how to use Electron, and I hope it will help you do the same!
