@@ -1,8 +1,12 @@
 {
   "name": "electron-text-editor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Brandon Bennett",
   "homepage": "https://github.com/Offroaders123/Electron-Text-Editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Offroaders123/Electron-Text-Editor.git"
+  },
   "description": "Electron Text Editor",
   "main": "main.js",
   "scripts": {
@@ -21,7 +25,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^11.2.3",
+    "electron": "^12.0.0-beta.28",
     "electron-builder": "^22.9.1"
   }
 }
