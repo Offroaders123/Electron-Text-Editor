@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/Offroaders123/Electron-Text-Editor.git"
   },
+  "license": "MIT",
   "description": "Electron Text Editor",
   "main": "main.js",
   "scripts": {
@@ -25,7 +26,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^12.0.0-beta.28",
-    "electron-builder": "^22.9.1"
+    "electron": "^12.0.10",
+    "electron-builder": "^22.11.5"
   }
 }
