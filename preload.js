@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("mainProcess",{/*
+contextBridge.exposeInMainWorld("electron",{/*
   send: (channel,data) => {
     let channels = ["toMain","create-window"];
     if (channels.includes(channel)) ipcRenderer.send(channel,data);

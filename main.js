@@ -27,9 +27,9 @@ function createWindow(){
     },
     frame: false,
     titleBarStyle: "hidden",
-    minWidth: 267,
+    minWidth: 300,
     minHeight: 150,
-    backgroundColor: "#333333"
+    backgroundColor: "#222222"
   });
   window.on("maximize",() => window.webContents.send("refresh-maximize"));
   window.on("unmaximize",() => window.webContents.send("refresh-maximize"));

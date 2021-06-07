@@ -8,91 +8,140 @@
   --selection-background: #75b1ff38;
   --selection-background-inactive: #a1a1a138;
 }
+:root:not(.macOS-device) {
+  --titlebar-area-inset-top: 0px;
+  --titlebar-area-inset-width-left: 0px;
+  --titlebar-area-inset-width-right: 138px;
+  --titlebar-area-inset-height: 32px;
+}
+:root.macOS-device {
+  --titlebar-area-inset-top: 0px;
+  --titlebar-area-inset-width-left: 68px;
+  --titlebar-area-inset-width-right: 0px;
+  --titlebar-area-inset-height: 28px;
+}
 html {
-  position: fixed;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 body {
+  position: fixed;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   color: #dddddd;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #333333;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", system-ui, sans-serif;
+  background: #222222;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
 }
 header {
   position: relative;
+  --header-height: max(var(--titlebar-area-inset-height),28px);
   display: flex;
   align-items: center;
   font-size: 13px;
-}
-body.macOS-device header {
-  height: 28px;
+  background: #333333;
   border-bottom: 1px solid #000000;
+}
+header::before, header::after {
+  content: "";
+  height: var(--header-height);
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+header::before {
+  width: var(--titlebar-area-inset-width-left);
+}
+header::after {
+  margin-left: auto;
+  width: var(--titlebar-area-inset-width-right);
 }
 header .app-region {
   margin: var(--app-region-margin);
   margin-bottom: 0;
   --app-region-margin: 4px;
   position: absolute;
+  left: 0;
+  top: 0;
   width: calc(100% - var(--app-region-margin) * 2);
   height: calc(100% - var(--app-region-margin));
   z-index: -1;
   -webkit-app-region: drag;
 }
 header .app-title {
-  margin-left: unset;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-body.window-inactive header .app-title {
-  opacity: 0.55;
-}
-@media (max-width: 500px) {
-  body:not(.macOS-device) header .app-title {
-    margin-left: auto;
-    position: unset;
-    left: unset;
-    transform: unset;
-  }
-}
-header .window-controls {
-  margin-left: auto;
-  height: 100%;
+  margin: 0 var(--app-title-gap);
+  flex-shrink: 0;
   display: flex;
-  -webkit-app-region: no-drag;
+  gap: var(--app-title-gap);
+  --app-title-gap: 10px;
 }
-body.window-inactive header .window-controls {
-  opacity: 0.55;
+header .app-icon {
+  width: 16px;
+  aspect-ratio: 1/1;
+  filter: invert() hue-rotate(180deg) saturate(150%);
 }
-body.macOS-device header .window-controls {
+:root.macOS-device header .app-icon {
   display: none;
 }
+:root.window-inactive header .app-name {
+  opacity: 0.55;
+}
+header .window-controls {
+  position: fixed;
+  top: var(--titlebar-area-inset-top);
+  height: var(--titlebar-area-inset-height);
+  display: flex;
+  font-size: 10px;
+  font-family: "Segoe MDL2 Assets";
+  -webkit-app-region: no-drag;
+}
+:root:not(.macOS-device) header .window-controls {
+  right: 0;
+  width: var(--titlebar-area-inset-width-right);
+}
+:root.macOS-device header .window-controls {
+  left: 0;
+  width: var(--titlebar-area-inset-width-left);
+}
+:root.window-inactive header .window-controls {
+  opacity: 0.55;
+}
 header .window-controls .control {
-  padding: 8px 16px;
-  color: inherit;
-  font-size: 14px;
+  flex-grow: 1;
   background: none;
   border: none;
   outline: none;
-  line-height: 14px;
+  transition: 100ms linear;
+  transition-property: color, background-color;
 }
-header .window-controls .control:hover {
-  background: #ffffff20;
+header .window-controls:active .control {
+  transition: none;
+}
+header .window-controls:not(:active) .control:hover, header .window-controls .control:hover:active {
+  color: #ffffff;
+}
+header .window-controls:not(:active) .control:hover {
+  background-color: #ffffff20;
+}
+header .window-controls .control:hover:active {
+  background-color: #ffffff38;
+}
+header .window-controls:not(:active) .control[data-control="close"]:hover {
+  background-color: #e81123;
+}
+header .window-controls .control[data-control="close"]:hover:active {
+  background-color: #e8112399;
 }
 header .window-controls .control[data-control="maximize"] [data-icon]:not(.active) {
   display: none;
 }
-header .window-controls .control[data-control="close"]:hover {
-  color: #ffffff;
-  background: #e81123;
+:root.macOS-device header .window-controls .control {
+  visibility: hidden;
 }
 main {
   position: relative;
@@ -103,54 +152,34 @@ main .workspace-editor {
   position: absolute;
   top: 0;
   left: 0;
-  color: #eeeeee;
-  font-size: 13px;
-  font-family: "Cousine", monospace;
-  background: #222222;
-  border: none;
-  outline: none;
 }
-body[data-orientation="horizontal"] main .workspace-editor {
+body.horizontal main .workspace-editor {
   width: 50%;
   height: 100%;
 }
-body[data-orientation="vertical"] main .workspace-editor {
+body.vertical main .workspace-editor {
   width: 100%;
   height: 50%;
 }
-main .workspace-editor textarea, main .workspace-editor ol {
-  padding: 6px;
-  background: none;
-}
-main .workspace-editor textarea {
-  resize: none;
-}
-main .workspace-editor ol {
-  padding: 6px 12px;
-  color: inherit;
-}
-main .workspace-editor li {
-  opacity: 0.55;
-}
-main .workspace-preview {
+main .preview {
   position: absolute;
   bottom: 0;
   right: 0;
   background: #ffffff;
   border: none;
 }
-body[data-orientation="horizontal"] main .workspace-preview {
+body.horizontal main .preview {
   width: 50%;
   height: 100%;
 }
-body[data-orientation="vertical"] main .workspace-preview {
+body.vertical main .preview {
   width: 100%;
   height: 50%;
 }
-::placeholder {
+button {
   color: inherit;
-  opacity: 0.55;
-  white-space: pre-wrap;
+  font-size: inherit;
+  font-family: inherit;
 }
 num-text {
   --padding: 8px;

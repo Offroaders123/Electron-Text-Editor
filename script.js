@@ -1,35 +1,39 @@
 window.Editor = {
+  appearance: () => ({
+    parent_window: (window.self == window.top)
+  }),
   environment: () => ({
-    macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined)
-  })
+    apple_device: (/(Mac|iPhone|iPad|iPod)/i.test(navigator.platform)),
+    macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined),
+    electron: ("electron" in window)
+  }),
+  orientation: () => document.body.getAttribute("data-orientation")
 };
-if (Editor.environment().macOS_device) document.body.classList.add("macOS-device");
-window.mainProcess.receive("refresh-maximize",refreshMaximizeControl);
-document.querySelectorAll("[data-numbered-container]").forEach(container => container.num_establishContainer());
+if (Editor.environment().macOS_device) document.documentElement.classList.add("macOS-device");
+if (Editor.environment().electron) window.electron.receive("refresh-maximize",refreshMaximizeControl);
+
 document.querySelectorAll("header .window-controls .control").forEach(control => {
-  var controlType = control.getAttribute("data-control");
-  if (controlType == "minimize") control.addEventListener("click",() => window.mainProcess.minimize());
-  if (controlType == "maximize") control.addEventListener("click",() => {
-    if (!window.mainProcess.isMaximized()){
-      window.mainProcess.maximize();
-    } else window.mainProcess.unmaximize();
-  });
-  if (controlType == "close") control.addEventListener("click",() => window.mainProcess.close());
-  control.setAttribute("tabindex","-1");
+  control.addEventListener("mousedown",event => event.preventDefault());
+  control.tabIndex = -1;
+  if (!Editor.environment().electron) return;
+  var type = control.getAttribute("data-control");
+  if (type == "minimize") control.addEventListener("click",() => window.electron.minimize());
+  if (type == "maximize") control.addEventListener("click",() => (!window.electron.isMaximized()) ? window.electron.maximize() : window.electron.unmaximize());
+  if (type == "close") control.addEventListener("click",() => window.electron.close());
 });
 document.querySelectorAll("num-text").forEach(textarea => textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true)));
 window.addEventListener("focus",() => {
-  if (document.body.classList.contains("window-inactive")) document.body.classList.remove("window-inactive");
+  if (document.documentElement.classList.contains("window-inactive")) document.documentElement.classList.remove("window-inactive");
 });
 window.addEventListener("blur",() => {
-  if (!document.body.classList.contains("window-inactive")) document.body.classList.add("window-inactive");
+  if (!document.documentElement.classList.contains("window-inactive")) document.documentElement.classList.add("window-inactive");
 });
 document.body.addEventListener("keydown",event => {
   var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), control = (event.ctrlKey && !Editor.environment().apple_device), command = (event.metaKey && Editor.environment().apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), controlShift = (control && shift), shiftCommand = (shift && command), controlCommand = (event.ctrlKey && command);
   if ((controlShift || shiftCommand) && pressed("c")){
     event.preventDefault();
     if (event.repeat) return;
-    window.mainProcess.createWindow();
+    window.electron.createWindow();
   }
   if ((controlShift || controlCommand) && (pressed("4") || pressed("$"))){
     event.preventDefault();
@@ -39,34 +43,39 @@ document.body.addEventListener("keydown",event => {
   if ((controlShift || shiftCommand) && pressed("h")){
     event.preventDefault();
     if (event.repeat) return;
-    insertMarkupTemplate();
+    insertTemplate();
   }
 });
 workspace_editor.addEventListener("input",refreshPreview);
-refreshMaximizeControl();
-if (window.self == window.top) workspace_editor.focus();
-function setOrientation(){
-  if (document.body.getAttribute("data-orientation") != "horizontal"){
-    document.body.setAttribute("data-orientation","horizontal");
-  } else document.body.setAttribute("data-orientation","vertical");
+if (Editor.environment().electron) refreshMaximizeControl();
+if (Editor.appearance().parent_window) workspace_editor.editor.focus();
+function setOrientation(orientation){
+  var param = (orientation);
+  if (!param && Editor.orientation() == "horizontal") orientation = "vertical";
+  if (!param && Editor.orientation() == "vertical") orientation = "horizontal";
+  if (orientation == Editor.orientation()) return;
+  document.body.classList.remove(Editor.orientation());
+  document.body.setAttribute("data-orientation",orientation);
+  document.body.classList.add(Editor.orientation());
 }
-function insertMarkupTemplate(){
-  workspace_editor.value = decodeURI("%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang=%22en-US%22%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1%22%3E%0A%0A%3Cstyle%3E%0A%20%20*,%20*::before,%20*::after%20%7B%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E");
+function insertTemplate(){
+  workspace_editor.value = decodeURI(`%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang=%22${navigator.language}%22%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1%22%3E%0A%0A%3Cstyle%3E%0A%20%20*,%20*::before,%20*::after%20%7B%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%7D%0A%20%20body%20%7B%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E`);
   workspace_editor.editor.setSelectionRange(0,0);
   workspace_editor.editor.focus();
   refreshPreview();
 }
 function refreshPreview(){
-  workspace_preview.contentWindow.document.open();
-  workspace_preview.contentWindow.document.write(workspace_editor.value);
-  workspace_preview.contentWindow.document.close();
+  preview.addEventListener("load",() => {
+    preview.contentWindow.document.open();
+    preview.contentWindow.document.write(workspace_editor.value);
+    preview.contentWindow.document.close();
+  },{ once: true });
+  preview.src = "about:blank";
 }
 function refreshMaximizeControl(){
-  var maximizeControl = document.querySelector("header .window-controls .control[data-control='maximize']");
-  maximizeControl.querySelectorAll("[data-icon]").forEach(icon => icon.classList.remove("active"));
-  var icon;
-  if (!window.mainProcess.isMaximized()){
-    icon = "maximize";
-  } else icon = "restore-down";
-  maximizeControl.querySelector(`[data-icon="${icon}"]`).classList.add("active");
+  var maximize = document.querySelector("header .window-controls .control[data-control='maximize']");
+  maximize.querySelectorAll("[data-icon].active").forEach(icon => icon.classList.remove("active"));
+  var icon = (!window.electron.isMaximized()) ? "maximize" : "restore";
+  maximize.querySelector(`[data-icon="${icon}"]`).classList.add("active");
+  maximize.title = icon[0].toUpperCase() + icon.slice(1);
 }
