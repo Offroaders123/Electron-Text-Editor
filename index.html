@@ -7,9 +7,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cousine&display=swap">
-<link rel="stylesheet" href="ntp_styles.css">
-<script src="ntp_script.js"></script>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="scrollbar-styles.css" data-scrollbar-styles>
+<script src="num-text/script.js"></script>
 
 </head>
 
@@ -29,10 +29,8 @@
 </header>
 
 <main>
-  <div class="workspace-editor" data-numbered-container>
-    <textarea id="workspace_editor" spellcheck="false"></textarea>
-  </div>
   <iframe id="workspace_preview" class="workspace-preview" src="about:blank"></iframe>
+  <num-text id="workspace_editor" class="workspace-editor"></num-text>
 </main>
 
 <script src="script.js"></script>

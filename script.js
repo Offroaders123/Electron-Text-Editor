@@ -17,6 +17,7 @@ document.querySelectorAll("header .window-controls .control").forEach(control =>
   if (controlType == "close") control.addEventListener("click",() => window.mainProcess.close());
   control.setAttribute("tabindex","-1");
 });
+document.querySelectorAll("num-text").forEach(textarea => textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true)));
 window.addEventListener("focus",() => {
   if (document.body.classList.contains("window-inactive")) document.body.classList.remove("window-inactive");
 });
@@ -50,7 +51,9 @@ function setOrientation(){
   } else document.body.setAttribute("data-orientation","vertical");
 }
 function insertMarkupTemplate(){
-  workspace_editor.num_changeValue(decodeURI("%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang=%22en-US%22%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1%22%3E%0A%0A%3Cstyle%3E%0A%20%20*,%20*::before,%20*::after%20%7B%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E"));
+  workspace_editor.value = decodeURI("%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang=%22en-US%22%3E%0A%0A%3Chead%3E%0A%0A%3Ctitle%3E%3C/title%3E%0A%3Cmeta%20charset=%22UTF-8%22%3E%0A%3Cmeta%20name=%22viewport%22%20content=%22width=device-width,%20initial-scale=1%22%3E%0A%0A%3Cstyle%3E%0A%20%20*,%20*::before,%20*::after%20%7B%0A%20%20%20%20box-sizing:%20border-box;%0A%20%20%20%20font-family:%20sans-serif;%0A%20%20%7D%0A%3C/style%3E%0A%0A%3C/head%3E%0A%0A%3Cbody%3E%0A%0A%3Cscript%3E%0A%3C/script%3E%0A%0A%3C/body%3E%0A%0A%3C/html%3E");
+  workspace_editor.editor.setSelectionRange(0,0);
+  workspace_editor.editor.focus();
   refreshPreview();
 }
 function refreshPreview(){
