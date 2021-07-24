@@ -1,7 +1,7 @@
 {
   "name": "electron-text-editor",
   "version": "0.4.0",
-  "author": "Brandon Bennett",
+  "author": "Brandon Bennett <offroaders123@gmail.com> (https://github.com/Offroaders123)",
   "homepage": "https://github.com/Offroaders123/Electron-Text-Editor",
   "repository": {
     "type": "git",
@@ -23,6 +23,9 @@
     },
     "mac": {
       "target": "dmg"
+    },
+    "linux": {
+      "target": "deb"
     }
   },
   "devDependencies": {
