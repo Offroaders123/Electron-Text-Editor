@@ -1,20 +1,20 @@
 {
   "name": "electron-text-editor",
   "version": "0.4.0",
-  "author": "Brandon Bennett <offroaders123@gmail.com> (https://github.com/Offroaders123)",
-  "homepage": "https://github.com/Offroaders123/Electron-Text-Editor",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Offroaders123/Electron-Text-Editor.git"
-  },
-  "license": "MIT",
-  "description": "Electron Text Editor",
+  "description": "A native text editor built using Electron!",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Offroaders123/Electron-Text-Editor.git"
+  },
+  "author": "Brandon Bennett <offroaders123@gmail.com> (https://github.com/Offroaders123)",
+  "license": "MIT",
+  "homepage": "https://github.com/Offroaders123/Electron-Text-Editor#readme",
   "build": {
     "appId": "com.offroaders123.electronTextEditor",
     "productName": "Electron Text Editor",
@@ -29,7 +29,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^12.0.10",
-    "electron-builder": "^22.11.5"
+    "electron": "^17.0.1",
+    "electron-builder": "^22.14.13"
   }
 }
