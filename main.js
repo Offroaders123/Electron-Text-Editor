@@ -4,11 +4,11 @@ const path = require("path");
 app.whenReady().then(createWindow);
 
 app.on("activate",() => {
-  if (BrowserWindow.getAllWindows().length == 0) createWindow();
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
 app.on("window-all-closed",() => {
-  if (process.platform != "darwin") app.quit();
+  if (process.platform !== "darwin") app.quit();
 });
 
 ipcMain.on("create-window",createWindow);
@@ -27,6 +27,10 @@ function createWindow(){
     },
     frame: false,
     titleBarStyle: "hidden",
+    titleBarOverlay: {
+      color: "#222222",
+      symbolColor: "#dddddd"
+    },
     minWidth: 300,
     minHeight: 150,
     backgroundColor: "#222222"

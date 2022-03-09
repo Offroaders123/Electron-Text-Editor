@@ -8,17 +8,11 @@
   --selection-background: #75b1ff38;
   --selection-background-inactive: #a1a1a138;
 }
-:root:not(.macOS-device) {
-  --titlebar-area-inset-top: 0px;
-  --titlebar-area-inset-width-left: 0px;
-  --titlebar-area-inset-width-right: 138px;
-  --titlebar-area-inset-height: 32px;
-}
-:root.macOS-device {
-  --titlebar-area-inset-top: 0px;
-  --titlebar-area-inset-width-left: 68px;
-  --titlebar-area-inset-width-right: 0px;
-  --titlebar-area-inset-height: 28px;
+:root {
+  --titlebar-area-inset-top: env(titlebar-area-y,0px);
+  --titlebar-area-inset-width-left: env(titlebar-area-x,0px);
+  --titlebar-area-inset-width-right: calc(100vw - env(titlebar-area-width,100vw) - var(--titlebar-area-inset-width-left));
+  --titlebar-area-inset-height: env(titlebar-area-height,0px);
 }
 html {
   width: 100%;
