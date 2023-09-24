@@ -1,4 +1,4 @@
-window.Editor = {
+globalThis.Editor = {
   appearance: () => ({
     parent_window: (window.self == window.top)
   }),
@@ -12,7 +12,7 @@ window.Editor = {
 if (Editor.environment().macOS_device) document.documentElement.classList.add("macOS-device");
 if (Editor.environment().electron) window.electron.receive("refresh-maximize",refreshMaximizeControl);
 
-document.querySelectorAll("header .window-controls .control").forEach(control => {
+document.querySelectorAll("header .window-controls .control").forEach(/** @param { HTMLButtonElement } control */(control) => {
   control.addEventListener("mousedown",event => event.preventDefault());
   control.tabIndex = -1;
   if (!Editor.environment().electron) return;
@@ -21,7 +21,7 @@ document.querySelectorAll("header .window-controls .control").forEach(control =>
   if (type == "maximize") control.addEventListener("click",() => (!window.electron.isMaximized()) ? window.electron.maximize() : window.electron.unmaximize());
   if (type == "close") control.addEventListener("click",() => window.electron.close());
 });
-document.querySelectorAll("num-text").forEach(textarea => textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true)));
+document.querySelectorAll("num-text").forEach(/** @param { NumText } textarea */(textarea) => textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true)));
 window.addEventListener("focus",() => {
   if (document.documentElement.classList.contains("window-inactive")) document.documentElement.classList.remove("window-inactive");
 });
@@ -29,6 +29,7 @@ window.addEventListener("blur",() => {
   if (!document.documentElement.classList.contains("window-inactive")) document.documentElement.classList.add("window-inactive");
 });
 document.body.addEventListener("keydown",event => {
+                                                                                                                                                                                                                                                                              // @ts-expect-error - weird
   var pressed = key => (event.key.toLowerCase() == key.toLowerCase()), control = (event.ctrlKey && !Editor.environment().apple_device), command = (event.metaKey && Editor.environment().apple_device), shift = (event.shiftKey || ((event.key.toUpperCase() == event.key) && (event.key + event.key == event.key * 2))), controlShift = (control && shift), shiftCommand = (shift && command), controlCommand = (event.ctrlKey && command);
   if ((controlShift || shiftCommand) && pressed("c")){
     event.preventDefault();
@@ -73,6 +74,7 @@ function refreshPreview(){
   preview.src = "about:blank";
 }
 function refreshMaximizeControl(){
+  /** @type { HTMLButtonElement } */
   var maximize = document.querySelector("header .window-controls .control[data-control='maximize']");
   maximize.querySelectorAll("[data-icon].active").forEach(icon => icon.classList.remove("active"));
   var icon = (!window.electron.isMaximized()) ? "maximize" : "restore";

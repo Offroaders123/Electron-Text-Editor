@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld("electron",{/*
   },*/
 
   send: (channel,data) => ipcRenderer.send(channel,data),
-  receive: (channel,callback) => ipcRenderer.on(channel,(event,...args) => callback(...args)),
+  receive: (channel,callback) => ipcRenderer.on(channel,(_event,...args) => callback(...args)),
   createWindow: () => ipcRenderer.send("create-window"),
   minimize: () => ipcRenderer.send("minimize-window"),
   maximize: () => ipcRenderer.send("maximize-window"),

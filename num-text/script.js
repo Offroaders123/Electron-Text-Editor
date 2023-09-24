@@ -1,3 +1,4 @@
+// @ts-nocheck
 class NumText extends HTMLElement {
   constructor(){
     super();
