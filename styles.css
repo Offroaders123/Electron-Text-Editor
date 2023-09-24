@@ -3,17 +3,20 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 :root {
-  --titlebar-area-inset-top: env(titlebar-area-y,0px);
-  --titlebar-area-inset-width-left: env(titlebar-area-x,0px);
-  --titlebar-area-inset-width-right: calc(100vw - env(titlebar-area-width,100vw) - var(--titlebar-area-inset-width-left));
-  --titlebar-area-inset-height: env(titlebar-area-height,0px);
+  --titlebar-area-inset-top: env(titlebar-area-y, 0px);
+  --titlebar-area-inset-width-left: env(titlebar-area-x, 0px);
+  --titlebar-area-inset-width-right: calc(100vw - env(titlebar-area-width, 100vw) - var(--titlebar-area-inset-width-left));
+  --titlebar-area-inset-height: env(titlebar-area-height, 0px);
 }
+
 html {
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
+
 body {
   position: fixed;
   width: 100%;
@@ -28,28 +31,33 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
+
 header {
   position: relative;
-  --header-height: max(var(--titlebar-area-inset-height),28px);
+  --header-height: max(var(--titlebar-area-inset-height), 28px);
   display: flex;
   align-items: center;
   font-size: 13px;
   background: #333333;
   border-bottom: 1px solid #000000;
 }
+
 header::before, header::after {
   content: "";
   height: var(--header-height);
   flex-shrink: 0;
   -webkit-app-region: no-drag;
 }
+
 header::before {
   width: var(--titlebar-area-inset-width-left);
 }
+
 header::after {
   margin-left: auto;
   width: var(--titlebar-area-inset-width-right);
 }
+
 header .app-region {
   margin: var(--app-region-margin);
   margin-bottom: 0;
@@ -62,6 +70,7 @@ header .app-region {
   z-index: -1;
   -webkit-app-region: drag;
 }
+
 header .app-title {
   margin: 0 var(--app-title-gap);
   flex-shrink: 0;
@@ -69,17 +78,21 @@ header .app-title {
   gap: var(--app-title-gap);
   --app-title-gap: 10px;
 }
+
 header .app-icon {
   width: 16px;
   aspect-ratio: 1/1;
   filter: invert() hue-rotate(180deg) saturate(150%);
 }
+
 :root.macOS-device header .app-icon {
   display: none;
 }
+
 :root.window-inactive header .app-name {
   opacity: 0.55;
 }
+
 header .window-controls {
   position: fixed;
   top: var(--titlebar-area-inset-top);
@@ -89,17 +102,21 @@ header .window-controls {
   font-family: "Segoe MDL2 Assets";
   -webkit-app-region: no-drag;
 }
+
 :root:not(.macOS-device) header .window-controls {
   right: 0;
   width: var(--titlebar-area-inset-width-right);
 }
+
 :root.macOS-device header .window-controls {
   left: 0;
   width: var(--titlebar-area-inset-width-left);
 }
+
 :root.window-inactive header .window-controls {
   opacity: 0.55;
 }
+
 header .window-controls .control {
   flex-grow: 1;
   background: none;
@@ -108,48 +125,62 @@ header .window-controls .control {
   transition: 100ms linear;
   transition-property: color, background-color;
 }
+
 header .window-controls:active .control {
   transition: none;
 }
-header .window-controls:not(:active) .control:hover, header .window-controls .control:hover:active {
+
+header .window-controls:not(:active) .control:hover,
+header .window-controls .control:hover:active {
   color: #ffffff;
 }
+
 header .window-controls:not(:active) .control:hover {
   background-color: #ffffff20;
 }
+
 header .window-controls .control:hover:active {
   background-color: #ffffff38;
 }
+
 header .window-controls:not(:active) .control[data-control="close"]:hover {
   background-color: #e81123;
 }
+
 header .window-controls .control[data-control="close"]:hover:active {
   background-color: #e8112399;
 }
+
 header .window-controls .control[data-control="maximize"] [data-icon]:not(.active) {
   display: none;
 }
+
 :root.macOS-device header .window-controls .control {
   visibility: hidden;
 }
+
 main {
   position: relative;
   flex: 1;
   display: flex;
 }
+
 main .workspace-editor {
   position: absolute;
   top: 0;
   left: 0;
 }
+
 body.horizontal main .workspace-editor {
   width: 50%;
   height: 100%;
 }
+
 body.vertical main .workspace-editor {
   width: 100%;
   height: 50%;
 }
+
 main .preview {
   position: absolute;
   bottom: 0;
@@ -157,19 +188,23 @@ main .preview {
   background: #ffffff;
   border: none;
 }
+
 body.horizontal main .preview {
   width: 50%;
   height: 100%;
 }
+
 body.vertical main .preview {
   width: 100%;
   height: 50%;
 }
+
 button {
   color: inherit;
   font-size: inherit;
   font-family: inherit;
 }
+
 num-text {
   --padding: 8px;
   background: #222222;

@@ -7,21 +7,37 @@ const __dirname = fileURLToPath(new URL(".",import.meta.url));
 app.whenReady().then(createWindow);
 
 app.on("activate",() => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  if (BrowserWindow.getAllWindows().length === 0){
+    createWindow();
+  }
 });
 
 app.on("window-all-closed",() => {
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin"){
+    app.quit();
+  }
 });
 
-ipcMain.on("create-window",createWindow);
-ipcMain.on("minimize-window",() => getCurrentWindow().minimize());
-ipcMain.on("maximize-window",() => getCurrentWindow().maximize());
-ipcMain.on("is-maximized-window",event => event.returnValue = getCurrentWindow().isMaximized());
-ipcMain.on("unmaximize-window",() => getCurrentWindow().unmaximize());
-ipcMain.on("close-window",() => getCurrentWindow().close());
+ipcMain.on("create-window",() => {
+  createWindow();
+});
+ipcMain.on("minimize-window",() => {
+  getCurrentWindow().minimize();
+});
+ipcMain.on("maximize-window",() => {
+  getCurrentWindow().maximize();
+});
+ipcMain.on("is-maximized-window",event => {
+  event.returnValue = getCurrentWindow().isMaximized();
+});
+ipcMain.on("unmaximize-window",() => {
+  getCurrentWindow().unmaximize();
+});
+ipcMain.on("close-window",() => {
+  getCurrentWindow().close();
+});
 
-function createWindow(){
+function createWindow(): void {
   const window = new BrowserWindow({
     webPreferences: {
       contextIsolation: true,
@@ -38,11 +54,17 @@ function createWindow(){
     minHeight: 150,
     backgroundColor: "#222222"
   });
-  window.on("maximize",() => window.webContents.send("refresh-maximize"));
-  window.on("unmaximize",() => window.webContents.send("refresh-maximize"));
+
+  window.on("maximize",() => {
+    window.webContents.send("refresh-maximize");
+  });
+  window.on("unmaximize",() => {
+    window.webContents.send("refresh-maximize");
+  });
+
   window.loadFile("index.html");
 }
 
-function getCurrentWindow(){
+function getCurrentWindow(): BrowserWindow {
   return BrowserWindow.getFocusedWindow();
 }
