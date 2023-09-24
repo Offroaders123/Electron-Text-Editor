@@ -2,6 +2,7 @@
 ._*
 Desktop.ini
 Thumbs.db
+
+/node_modules
 /dist
 /dist-ts
-/node_modules
