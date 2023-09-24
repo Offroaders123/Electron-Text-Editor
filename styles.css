@@ -4,11 +4,6 @@
   box-sizing: border-box;
 }
 :root {
-  --selection-color: inherit;
-  --selection-background: #75b1ff38;
-  --selection-background-inactive: #a1a1a138;
-}
-:root {
   --titlebar-area-inset-top: env(titlebar-area-y,0px);
   --titlebar-area-inset-width-left: env(titlebar-area-x,0px);
   --titlebar-area-inset-width-right: calc(100vw - env(titlebar-area-width,100vw) - var(--titlebar-area-inset-width-left));
@@ -177,22 +172,5 @@ button {
 }
 num-text {
   --padding: 8px;
-  color: #eaeaea;
-  font-family: "Cousine", monospace;
-  line-height: 1.4;
-  --background: #222222;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  transition: none;
-}
-num-text::part(editor) {
-  resize: none;
-}
-::selection, num-text::part(editor)::selection {
-  color: var(--selection-color);
-  background: var(--selection-background);
-}
-::selection:window-inactive, num-text::part(editor)::selection:window-inactive {
-  background: var(--selection-background-inactive);
+  background: #222222;
 }

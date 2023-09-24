@@ -28,6 +28,9 @@
       "target": "deb"
     }
   },
+  "dependencies": {
+    "@stedit/num-text": "^1.0.1"
+  },
   "devDependencies": {
     "@types/node": "^20.6.4",
     "electron": "^17.1.0",

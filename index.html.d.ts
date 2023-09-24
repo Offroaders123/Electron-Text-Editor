@@ -1,2 +1,2 @@
-declare var workspace_editor: NumText;
+declare var workspace_editor: NumTextElement;
 declare var preview: HTMLIFrameElement;

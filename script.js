@@ -21,7 +21,10 @@ document.querySelectorAll("header .window-controls .control").forEach(/** @param
   if (type == "maximize") control.addEventListener("click",() => (!window.electron.isMaximized()) ? window.electron.maximize() : window.electron.unmaximize());
   if (type == "close") control.addEventListener("click",() => window.electron.close());
 });
-document.querySelectorAll("num-text").forEach(/** @param { NumText } textarea */(textarea) => textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true)));
+document.querySelectorAll("num-text").forEach(/** @param { NumTextElement } textarea */(textarea) => {
+  textarea.themes.remove("vanilla-appearance");
+  textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true));
+});
 window.addEventListener("focus",() => {
   if (document.documentElement.classList.contains("window-inactive")) document.documentElement.classList.remove("window-inactive");
 });

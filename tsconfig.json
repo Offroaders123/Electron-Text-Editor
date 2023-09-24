@@ -5,6 +5,9 @@
     "module": "CommonJS",
     "target": "ESNext",
     "isolatedModules": true,
+    "types": [
+      "@stedit/num-text"
+    ],
     "noEmit": true,
     // "strict": true,
     "noImplicitOverride": true,
