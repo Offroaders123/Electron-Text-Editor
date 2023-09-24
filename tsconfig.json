@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
+    "outDir": "./dist-ts",
     "module": "CommonJS",
     "target": "ESNext",
     "isolatedModules": true,
     "types": [
       "@stedit/num-text"
     ],
-    "noEmit": true,
     // "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

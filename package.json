@@ -2,7 +2,7 @@
   "name": "electron-text-editor",
   "version": "0.4.0",
   "description": "A native text editor built using Electron!",
-  "main": "main.js",
+  "main": "./dist-ts/main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",

@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
+import { app, BrowserWindow, ipcMain } from "electron";
+import path = require("path");
 
 app.whenReady().then(createWindow);
 

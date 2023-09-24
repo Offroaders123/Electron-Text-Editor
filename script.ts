@@ -1,4 +1,4 @@
-globalThis.Editor = {
+var Editor = {
   appearance: () => ({
     parent_window: (window.self == window.top)
   }),
@@ -7,12 +7,12 @@ globalThis.Editor = {
     macOS_device: (/(Mac)/i.test(navigator.platform) && navigator.standalone == undefined),
     electron: ("electron" in window)
   }),
-  orientation: () => document.body.getAttribute("data-orientation")
+  orientation: () => document.body.getAttribute("data-orientation") as "horizontal" | "vertical"
 };
 if (Editor.environment().macOS_device) document.documentElement.classList.add("macOS-device");
 if (Editor.environment().electron) window.electron.receive("refresh-maximize",refreshMaximizeControl);
 
-document.querySelectorAll("header .window-controls .control").forEach(/** @param { HTMLButtonElement } control */(control) => {
+document.querySelectorAll("header .window-controls .control").forEach((control: HTMLButtonElement) => {
   control.addEventListener("mousedown",event => event.preventDefault());
   control.tabIndex = -1;
   if (!Editor.environment().electron) return;
@@ -21,7 +21,7 @@ document.querySelectorAll("header .window-controls .control").forEach(/** @param
   if (type == "maximize") control.addEventListener("click",() => (!window.electron.isMaximized()) ? window.electron.maximize() : window.electron.unmaximize());
   if (type == "close") control.addEventListener("click",() => window.electron.close());
 });
-document.querySelectorAll("num-text").forEach(/** @param { NumTextElement } textarea */(textarea) => {
+document.querySelectorAll("num-text").forEach((textarea: NumTextElement) => {
   textarea.themes.remove("vanilla-appearance");
   textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true));
 });
@@ -53,7 +53,7 @@ document.body.addEventListener("keydown",event => {
 workspace_editor.addEventListener("input",refreshPreview);
 if (Editor.environment().electron) refreshMaximizeControl();
 if (Editor.appearance().parent_window) workspace_editor.editor.focus();
-function setOrientation(orientation){
+function setOrientation(orientation?: "horizontal" | "vertical"){
   var param = (orientation);
   if (!param && Editor.orientation() == "horizontal") orientation = "vertical";
   if (!param && Editor.orientation() == "vertical") orientation = "horizontal";
@@ -77,8 +77,7 @@ function refreshPreview(){
   preview.src = "about:blank";
 }
 function refreshMaximizeControl(){
-  /** @type { HTMLButtonElement } */
-  var maximize = document.querySelector("header .window-controls .control[data-control='maximize']");
+  var maximize: HTMLButtonElement = document.querySelector("header .window-controls .control[data-control='maximize']");
   maximize.querySelectorAll("[data-icon].active").forEach(icon => icon.classList.remove("active"));
   var icon = (!window.electron.isMaximized()) ? "maximize" : "restore";
   maximize.querySelector(`[data-icon="${icon}"]`).classList.add("active");
