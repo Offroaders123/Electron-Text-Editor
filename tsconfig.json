@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "./dist-ts",
-    "module": "CommonJS",
+    "module": "NodeNext",
     "target": "ESNext",
     "isolatedModules": true,
     "types": [
-      "@stedit/num-text"
+      "@stedit/num-text",
+      "electron-nightly"
     ],
     // "strict": true,
     "noImplicitOverride": true,

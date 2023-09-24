@@ -1,5 +1,8 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import path = require("path");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = fileURLToPath(new URL(".",import.meta.url));
 
 app.whenReady().then(createWindow);
 
@@ -23,7 +26,7 @@ function createWindow(){
     webPreferences: {
       contextIsolation: true,
       sandbox: true,
-      preload: path.join(__dirname,"preload.js")
+      preload: path.join(__dirname,"preload.cjs")
     },
     frame: false,
     titleBarStyle: "hidden",
