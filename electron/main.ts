@@ -1,10 +1,14 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, ipcMain, BrowserWindow, Menu } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { menu } from "./menu.js";
 
 const __dirname = fileURLToPath(new URL(".",import.meta.url));
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  Menu.setApplicationMenu(menu);
+  createWindow();
+});
 
 app.on("activate",() => {
   if (BrowserWindow.getAllWindows().length === 0){
