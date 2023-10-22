@@ -1,21 +1,30 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("electron",{/*
-  send: (channel,data) => {
-    let channels = ["toMain","create-window"];
-    if (channels.includes(channel)) ipcRenderer.send(channel,data);
-  },
-  receive: (channel,callback) => {
-    let channels = ["fromMain","create-window"];
-    if (channel == "fromMain") ipcRenderer.on(channel,(event,...args) => callback(...args));
-  },*/
+export type ElectronGlobal = typeof electronGlobal;
+export type ReceiveChannel = "refresh-maximize";
 
-  send: (channel,data) => ipcRenderer.send(channel,data),
-  receive: (channel,callback) => ipcRenderer.on(channel,(_event,...args) => callback(...args)),
-  createWindow: () => ipcRenderer.send("create-window"),
-  minimize: () => ipcRenderer.send("minimize-window"),
-  maximize: () => ipcRenderer.send("maximize-window"),
-  isMaximized: () => ipcRenderer.sendSync("is-maximized-window"),
-  unmaximize: () => ipcRenderer.send("unmaximize-window"),
-  close: () => ipcRenderer.send("close-window")
-});
+const electronGlobal = {
+  receive(channel: ReceiveChannel, callback: () => void): void {
+    ipcRenderer.on(channel,() => callback());
+  },
+  createWindow(): void {
+    ipcRenderer.send("create-window");
+  },
+  minimize(): void {
+    ipcRenderer.send("minimize-window");
+  },
+  maximize(): void {
+    ipcRenderer.send("maximize-window");
+  },
+  isMaximized(): boolean {
+    return ipcRenderer.sendSync("is-maximized-window") as boolean;
+  },
+  unmaximize(): void {
+    ipcRenderer.send("unmaximize-window");
+  },
+  close(): void {
+    ipcRenderer.send("close-window");
+  }
+};
+
+contextBridge.exposeInMainWorld("electron",electronGlobal);

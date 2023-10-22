@@ -65,7 +65,7 @@ for (const control of document.querySelectorAll<HTMLButtonElement>("header .wind
 
 for (const textarea of document.querySelectorAll("num-text")){
   textarea.themes.remove("vanilla-appearance");
-  textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]").cloneNode(true));
+  textarea.container.appendChild(document.querySelector("[data-scrollbar-styles]")!.cloneNode(true));
 }
 
 window.addEventListener("focus",() => {
@@ -119,14 +119,14 @@ if (Editor.appearance.parent_window){
 }
 
 function setOrientation(orientation?: Orientation): void {
-  const param = orientation !== undefined;
-  if (!param && Editor.orientation === "horizontal"){
-    orientation = "vertical";
-  }
-  if (!param && Editor.orientation === "vertical"){
-    orientation = "horizontal";
-  }
   if (orientation === Editor.orientation) return;
+
+  if (orientation === undefined){
+    switch (Editor.orientation){
+      case "horizontal": orientation = "vertical"; break;
+      case "vertical": orientation = "horizontal"; break;
+    }
+  }
 
   document.body.classList.remove(Editor.orientation);
   document.body.setAttribute("data-orientation",orientation);
@@ -141,25 +141,26 @@ function insertTemplate(): void {
 }
 
 async function refreshPreview(): Promise<void> {
-  await new Promise(resolve => {
+  await new Promise((resolve,reject) => {
     preview.addEventListener("load",resolve,{ once: true });
+    preview.addEventListener("error",reject,{ once: true });
     preview.src = "about:blank";
   });
-  preview.contentWindow.document.open();
-  preview.contentWindow.document.write(workspace_editor.value);
-  preview.contentWindow.document.close();
+  preview.contentWindow!.document.open();
+  preview.contentWindow!.document.write(workspace_editor.value);
+  preview.contentWindow!.document.close();
 }
 
 function refreshMaximizeControl(): void {
   type MaximizeIcon = "maximize" | "restore";
 
-  const maximize = document.querySelector<HTMLButtonElement>("header .window-controls .control[data-control='maximize']");
+  const maximize = document.querySelector<HTMLButtonElement>("header .window-controls .control[data-control='maximize']")!;
   const icon: MaximizeIcon = electron.isMaximized() ? "restore" : "maximize";
 
   for (const icon of maximize.querySelectorAll<HTMLSpanElement>("[data-icon].active")){
     icon.classList.remove("active");
   }
 
-  maximize.querySelector(`[data-icon="${icon}"]`).classList.add("active");
-  maximize.title = `${icon[0].toUpperCase()}${icon.slice(1)}`;
+  maximize.querySelector(`[data-icon="${icon}"]`)!.classList.add("active");
+  maximize.title = `${icon[0]!.toUpperCase()}${icon.slice(1)}`;
 }

@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { menu } from "./menu.js";
 
+import type { ReceiveChannel } from "./preload.cjs";
+
 const __dirname = fileURLToPath(new URL(".",import.meta.url));
 
 app.whenReady().then(() => {
@@ -32,7 +34,7 @@ ipcMain.on("maximize-window",() => {
   getCurrentWindow().maximize();
 });
 ipcMain.on("is-maximized-window",event => {
-  event.returnValue = getCurrentWindow().isMaximized();
+  event.returnValue = getCurrentWindow().isMaximized() satisfies boolean;
 });
 ipcMain.on("unmaximize-window",() => {
   getCurrentWindow().unmaximize();
@@ -60,15 +62,19 @@ function createWindow(): void {
   });
 
   window.on("maximize",() => {
-    window.webContents.send("refresh-maximize");
+    window.webContents.send("refresh-maximize" satisfies ReceiveChannel);
   });
   window.on("unmaximize",() => {
-    window.webContents.send("refresh-maximize");
+    window.webContents.send("refresh-maximize" satisfies ReceiveChannel);
   });
 
   window.loadFile("index.html");
 }
 
 function getCurrentWindow(): BrowserWindow {
-  return BrowserWindow.getFocusedWindow();
+  const window = BrowserWindow.getFocusedWindow();
+  if (window === null){
+    throw new Error("Could not get a focused window.");
+  }
+  return window;
 }

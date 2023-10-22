@@ -8,7 +8,7 @@
       "@stedit/num-text",
       "electron-nightly"
     ],
-    // "strict": true,
+    "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
